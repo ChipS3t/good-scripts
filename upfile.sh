@@ -35,13 +35,13 @@ firstPart=$(echo "$url" | grep -oE 'https://tmpfiles.org/[^/]*')
 lastPart=$(echo "$url" | grep -oE '/[^/]*$')
 
 # Print the first part of the URL up to the 6-digit number, without the 6-digit number itself
-echo "${firstPart%$number}"
+printf "%s" "${firstPart%$number}"
 
 # Set the text attribute to bold
 tput bold
 
 # Print the 6-digit number in bold
-echo "$number"
+printf "%s" "$number"
 
 # Reset the text attribute to the default
 tput sgr0
