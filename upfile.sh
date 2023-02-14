@@ -27,32 +27,22 @@ for file in "${files[@]}"; do
             exit 1
         fi
 
-        # Extract the URL value from the JSON output using bash string manipulation
-        url=${output#*\"url\":\"}  # remove everything before "url":"
-        url=${url%%\"*}  # remove everything after the first "
-
-        # Extract the 6-digit number from the URL using a regular expression
-        number=$(echo "$url" | grep -oE '[0-9]{6}')
-
-        # Extract the first part of the URL up to the 6-digit number using a regular expression
-        firstPart=$(echo "$url" | grep -oE 'https://tmpfiles.org/[^/]*')
-
-        # Extract the last part of the URL (the filename and extension) using a regular expression
-        lastPart=$(echo "$url" | grep -oE '/[^/]*$')
-
-        # Print the first part of the URL up to the 6-digit number, without the 6-digit number itself
-        printf "%s" "${firstPart%$number}"
-
+        # Extract the 6 digit number that identifies the result
+        id="$(echo $output | sed -n 's/.*\/\([0-9]\{6\}\)\/.*/\1/p')"
+        
+        # Print the first part of the url
+        printf "https://tmpfiles.org/dl/"
+        
         # Set the text attribute to bold
         tput bold
-
-        # Print the 6-digit number in bold
-        printf "%s" "$number"
-
+        
+        # Print the 6 digit number
+        printf "%s" "${id}"
+        
         # Reset the text attribute to the default
         tput sgr0
-
-        # Print the last part of the URL (the filename and extension)
-        echo "$lastPart"
+        
+        # Print the rest of the url
+        printf "/%s\n" "${expanded_file}"
     done
 done
